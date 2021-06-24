@@ -83,11 +83,11 @@ class Plain {
 @DecorateAll(Uppercase, { deep: true })
 class Decorated extends Plain {}
 
-const plain = Plain();
+const plain = new Plain();
 console.log(plain.hi()) // logs "hi"
 console.log(plain.hello()) // logs "hello"
 
-const decorated = Ddecorated();
+const decorated = new Decorated();
 console.log(decorated.hi()) // logs "HI"
 console.log(decorated.hello()) // logs "HELLO"
 ```
