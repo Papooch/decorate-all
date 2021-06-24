@@ -2,10 +2,13 @@
   "name": "decorate-all",
   "version": "1.0.0",
   "description": "Decorate all methods of a class using a single class decorator",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "tsc"
   },
   "repository": {
     "type": "git",
