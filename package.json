@@ -1,6 +1,6 @@
 {
   "name": "decorate-all",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Decorate all methods of a class using a single class decorator",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
