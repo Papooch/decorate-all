@@ -1,3 +1,5 @@
+import { copyMetadata } from './copy-metadata';
+
 /**
  * Apply the given decorator to all class methods
  *
@@ -31,7 +33,11 @@ export const DecorateAll = (
                 propName != 'constructor';
             if (options.exclude?.includes(propName)) continue;
             if (!isMethod) continue;
+            const originalMethod = descriptor.value;
             decorator(target, propName, descriptor);
+            if (originalMethod != descriptor.value) {
+                copyMetadata(originalMethod, descriptor.value);
+            }
             Object.defineProperty(target.prototype, propName, descriptor);
         }
     };

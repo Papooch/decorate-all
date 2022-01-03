@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { DecorateAll } from './decorate-all.decorator';
 
 const AppendString = (mark: string) => {
@@ -13,9 +14,11 @@ const AppendString = (mark: string) => {
     };
 };
 
+@Reflect.metadata('name', 'Hello')
 class Hello {
     constructor(public message: string) {}
 
+    @Reflect.metadata('name', 'Hello.a')
     a(name: string) {
         return this.message + name;
     }
@@ -33,6 +36,7 @@ class Hello {
 class DecoratedHello {
     constructor(public message: string) {}
 
+    @Reflect.metadata('name', 'DecoratedHello.a')
     a(name: string) {
         return this.message + name;
     }
@@ -83,7 +87,7 @@ class ExcludedHello {
 @DecorateAll(AppendString('?'), { deep: true, exclude: ['b'] })
 class ExtendedDecoratedHello extends ExtendedHello {}
 
-describe('ApplyToAll', () => {
+describe('DecorateAll', () => {
     it('decorates all methods', () => {
         const hello = new DecoratedHello('test');
         expect(hello.a('a')).toEqual('testa!');
@@ -127,5 +131,16 @@ describe('ApplyToAll', () => {
         expect(hello.a('a')).toEqual('testa?');
         expect(hello.b('b')).toEqual('testb');
         expect(hello.c('c')).toEqual('testc?!');
+    });
+
+    it('preserves metadata from own method', () => {
+        const hello = new DecoratedHello('');
+        const metadata = Reflect.getMetadata('name', hello, 'a');
+        expect(metadata).toEqual('DecoratedHello.a');
+    });
+    it('preserves metadata from inherited method', () => {
+        const hello = new ExtendedHello('');
+        const metadata = Reflect.getMetadata('name', hello, 'a');
+        expect(metadata).toEqual('Hello.a');
     });
 });
