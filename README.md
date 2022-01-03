@@ -6,7 +6,7 @@ A `typescript` decorator that allows you to apply another decorator to _all_ met
 npm i decorate-all
 ```
 
-> **Note:** since version `1.1.0`, this package uses the [`reflect-metadata`](https://www.npmjs.com/package/reflect-metadata) as a _peer dependency_, so you need to have it installed.
+> **Note:** since version `1.1.0`, this package uses the [`reflect-metadata`](https://www.npmjs.com/package/reflect-metadata) package as a _peer dependency_, so you need to have it installed.
 
 ## Why
 
