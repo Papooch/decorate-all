@@ -1,5 +1,11 @@
 import { copyMetadata } from './copy-metadata';
 
+export interface DecorateAllOptions {
+    deep?: boolean;
+    exclude?: string[];
+    excludePrefix?: string;
+}
+
 /**
  * Apply the given decorator to all class methods
  *
@@ -13,7 +19,7 @@ export const DecorateAll = (
         propertyKey: string,
         descriptor?: PropertyDescriptor,
     ) => void,
-    options: { exclude?: string[]; deep?: boolean } = {},
+    options: DecorateAllOptions = {},
 ) => {
     return (target: any) => {
         let descriptors = Object.getOwnPropertyDescriptors(target.prototype);
@@ -32,6 +38,7 @@ export const DecorateAll = (
                 typeof descriptor.value == 'function' &&
                 propName != 'constructor';
             if (options.exclude?.includes(propName)) continue;
+            if (propName.startsWith(options.excludePrefix)) continue;
             if (!isMethod) continue;
             const originalMethod = descriptor.value;
             decorator(target, propName, descriptor);
