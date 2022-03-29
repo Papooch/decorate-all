@@ -10,9 +10,9 @@ npm i decorate-all
 
 ## Why
 
-A need for this decorator arose from having to decorate all methods (route handlers) of a [NestJS](https://nestjs.com/) controller class with the same parameter decorator. In the project, which is a multi-tenant application, most routes include a "tenantId" path parameter which needed to be specified using a route decorator. Repeating it over each method was tedious and error prone.
+A need for this decorator arose from having to decorate all methods (route handlers) of a controller class with the same parameter decorator to apply the framework-specific metadata. In the project, which is a multi-tenant application, most routes contain the same `tenantId` path parameter and repeating it over each method turned out to be tedious and error prone.
 
-Thus, `decorate-all` was born.
+This decorator is, however, not limited to adding simple metadata decorators. Another use case can be applying a logging decorator (that actually alters the method's implementation) on all methods of a class for debugging or for tracing purposes.
 
 ## Usage
 
@@ -91,8 +91,32 @@ console.log(hello.galaxy()); // logs "galaxy"
 console.log(hello.universe()); // logs "UNIVERSE"
 ```
 
+-   `excludePrefix: string`  
+    methods with the given prefix won't be decorated
+
+```ts
+// apply the Uppercase decorator to all methods, except 'galaxy'
+@DecorateAll(Uppercase, { excludePrefix: '_' })
+class Hello {
+    world() {
+        return 'world';
+    }
+    _galaxy() {
+        return 'galaxy';
+    }
+    universe() {
+        return 'universe';
+    }
+}
+
+const hello = new Hello();
+console.log(hello.world()); // logs "WORLD"
+console.log(hello._galaxy()); // logs "galaxy"
+console.log(hello.universe()); // logs "UNIVERSE"
+```
+
 -   `deep: boolean`  
-    By default, only the class' own methods are decorated. If you pass `deep: true`, the decorator will be also applied to inherited methods of any extended class. (It can also be combined with the exclude option).
+    By default, only the class' own methods are decorated. If you pass `deep: true`, the decorator will be also applied to inherited methods of any extended class. (It can also be combined with the exclude options).
 
 ```ts
 class Plain {
