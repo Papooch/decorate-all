@@ -87,6 +87,30 @@ class ExcludedHello {
 @DecorateAll(AppendString('?'), { deep: true, exclude: ['b'] })
 class ExtendedDecoratedHello extends ExtendedHello {}
 
+@DecorateAll(AppendString('?'), { excludePrefix: '_' })
+class ExcludePrefixHello {
+    constructor(public message: string) {}
+
+    _a(name: string) {
+        return this.message + name;
+    }
+
+    b(name: string) {
+        return this.message + name;
+    }
+}
+
+@DecorateAll(AppendString('!'), {
+    excludePrefix: 'PRIVATE',
+    deep: true,
+    exclude: ['_a'],
+})
+class ExtendedExcludePrefixHello extends ExcludePrefixHello {
+    PRIVATE_c(name: string) {
+        return this.message + name;
+    }
+}
+
 describe('DecorateAll', () => {
     it('decorates all methods', () => {
         const hello = new DecoratedHello('test');
@@ -108,24 +132,40 @@ describe('DecorateAll', () => {
         expect(hello.b('b')).toEqual('testb!');
         expect(hello.c('c')).toEqual('testc!');
     });
+
     it('leaves the base class intact', () => {
         const hello = new Hello('test');
         expect(hello.a('a')).toEqual('testa');
         expect(hello.b('b')).toEqual('testb');
         expect(hello.c('c')).toEqual('testc');
     });
+
     it('does not decorate excluded methods', () => {
         const hello = new ExcludedHello('test');
         expect(hello.a('a')).toEqual('testa?');
         expect(hello.b('b')).toEqual('testb');
         expect(hello.c('c')).toEqual('testc?');
     });
+
+    it('does not decorate methods with excluded prefix', () => {
+        const hello = new ExcludePrefixHello('test');
+        expect(hello._a('a')).toEqual('testa');
+        expect(hello.b('b')).toEqual('testb?');
+    });
+    it('does not decorate methods from child class with excluded prefix', () => {
+        const hello = new ExtendedExcludePrefixHello('test');
+        expect(hello._a('a')).toEqual('testa');
+        expect(hello.b('b')).toEqual('testb!?');
+        expect(hello.PRIVATE_c('c')).toEqual('testc');
+    });
+
     it('does not decorate excluded inherited methods', () => {
         const hello = new DeepExtendedExcludedHello('test');
         expect(hello.a('a')).toEqual('testa?');
         expect(hello.b('b')).toEqual('testb');
         expect(hello.c('c')).toEqual('testc?');
     });
+
     it('preserves decorators on inherited methods', () => {
         const hello = new ExtendedDecoratedHello('test');
         expect(hello.a('a')).toEqual('testa?');
@@ -138,6 +178,7 @@ describe('DecorateAll', () => {
         const metadata = Reflect.getMetadata('name', hello, 'a');
         expect(metadata).toEqual('DecoratedHello.a');
     });
+
     it('preserves metadata from inherited method', () => {
         const hello = new ExtendedHello('');
         const metadata = Reflect.getMetadata('name', hello, 'a');
