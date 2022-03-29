@@ -2,5 +2,13 @@
     "semi": true,
     "tabWidth": 4,
     "trailingComma": "all",
-    "singleQuote": true
+    "singleQuote": true,
+    "overrides": [
+        {
+            "files": ["*.yaml", "*.yml"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
 }
