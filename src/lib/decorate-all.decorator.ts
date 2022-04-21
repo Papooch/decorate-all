@@ -14,11 +14,7 @@ export interface DecorateAllOptions {
  * @param {boolean} options.deep if true, also decorates methods of the extended classes (recusrively)
  */
 export const DecorateAll = (
-    decorator: (
-        target: any,
-        propertyKey: string,
-        descriptor?: PropertyDescriptor,
-    ) => void,
+    decorator: MethodDecorator,
     options: DecorateAllOptions = {},
 ) => {
     return (target: any) => {
