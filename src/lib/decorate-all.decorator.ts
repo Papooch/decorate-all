@@ -10,8 +10,9 @@ export interface DecorateAllOptions {
  * Apply the given decorator to all class methods
  *
  * @param decorator Method decorator to apply to all methods of a class
+ * @param options
  * @param {string[]} options.exclude array of method names that won't be decorated
- * @param {boolean} options.deep if true, also decorates methods of the extended classes (recusrively)
+ * @param {boolean} options.deep if true, also decorates methods of the extended classes (recursively)
  */
 export const DecorateAll = (
     decorator: MethodDecorator,
